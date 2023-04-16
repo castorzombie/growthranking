@@ -6,8 +6,8 @@ export interface DataRequest {
 };
   
 export interface stateListProps{
-    children: React.ReactNode
-    dataRequest: DataRequest
+    children: React.ReactNode;
+    dataRequest: DataRequest;
 };
 
 export enum Selected {
@@ -24,12 +24,17 @@ export type ApiResponse = {
 };
 
 export type CookState = {
-    State: string,
-    Household: number
-    PropertyValue: number,
-    Population:number
-    growth100: number
+    State: string;
+    Household: number;
+    PropertyValue: number;
+    Population:number;
+    growth100: number;
 
+}
+
+export type GrowthItem = {
+    State: string;
+    growth100: number;
 }
   
 

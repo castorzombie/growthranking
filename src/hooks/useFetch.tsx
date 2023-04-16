@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 /*Types */
 import { ApiResponse } from '../types/types';
 
-export const useFetch = (measure: string, years: string): ApiResponse => {
+export const useFetch = (measure: string, range: string | number): ApiResponse => {
 
   const [ dataResponse, setDataresponse] = useState<any>();
   const [error, setError] = useState<any>();
@@ -16,7 +16,7 @@ export const useFetch = (measure: string, years: string): ApiResponse => {
 
     try {
       const apiResponse = await fetch(
-        `https://datausa.io/api/data?drilldowns=State&measures=${measure}&year=${years}`
+        `https://datausa.io/api/data?drilldowns=State&measures=${measure}&year=${range}`
       );
       const json = await apiResponse.json();
       setDataresponse(json);
@@ -27,16 +27,16 @@ export const useFetch = (measure: string, years: string): ApiResponse => {
     setLoading(false);
 
     },
-    [measure, years],
+    [measure, range],
   )
   
   useEffect(() => {
 
-    if( measure || years ){
+    if( measure || range ){
       getDataFromAPI();
     }
 
-  }, [measure, years, getDataFromAPI]);
+  }, [measure, range, getDataFromAPI]);
 
   return { dataResponse, error, loading };
 };

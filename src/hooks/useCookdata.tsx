@@ -26,9 +26,9 @@ export const useCookdata = (dataResponse: any)  => {
           const { 'Property Value': PropertyValueOld } = oldValues;
 
           const growth100 = ( PropertyValueCurrent - PropertyValueOld ) / PropertyValueOld * 100;
-          console.log( PropertyValueCurrent)
-          console.log( PropertyValueOld)
-          console.log( growth100)
+          //console.log( PropertyValueCurrent)
+          //console.log( PropertyValueOld)
+          //console.log( growth100)
 
           const cookItem = { 
             Household, 

@@ -1,10 +1,11 @@
 
 /* Libraries */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 /* Hooks */
 import { useFetch } from '../hooks/useFetch';
-import { useCookdata } from '../hooks/useCookdata';
+import { useFormatdata } from '../hooks/useFormatData';
+import { useGrowth } from '../hooks/useGrowth';
 
 /* types */
 import { stateListProps, ApiResponse } from '../types/types';
@@ -18,12 +19,43 @@ import { Container, Row } from 'react-bootstrap'
 
 const StateList = ({children, dataRequest}: stateListProps) => {
 
-  const res: ApiResponse = useFetch(
+  const [ primaryData, setPrimaryData] = useState<any>([]);
+
+  const primaryResponse: ApiResponse = useFetch(
     dataRequest.measure,
+    dataRequest.year
+  );
+
+  const { cookData } = useFormatdata(
+    primaryResponse.dataResponse
+  );
+
+  const growthResponse: ApiResponse = useFetch(
+    'Property+Value',
     dataRequest.years
   );
-  
-  const { cookData } = useCookdata(res.dataResponse);
+
+  const { growthData } = useGrowth(
+    growthResponse.dataResponse
+  );
+
+  useEffect( () => {
+
+    if( cookData ){
+      //console.log(cookData)
+      //setPrimaryData(cookData);
+    }
+
+    if( growthResponse.dataResponse ){
+      //console.log(primaryData)
+      //console.log(growthResponse.dataResponse);
+    }
+
+    if( growthData ){
+      //console.log(growthData);
+    }
+
+   }, [cookData, primaryData, growthResponse, growthData])
 
   return (
     <Container>
