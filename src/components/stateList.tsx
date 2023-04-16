@@ -1,16 +1,43 @@
 
+/* Libraries */
+import React from 'react';
+
 /* Hooks */
-import { useFetch, ApiResponse } from '../hooks/useFetch';
+import { useFetch } from '../hooks/useFetch';
+import { useCookdata } from '../hooks/useCookdata';
 
-const StateList = () => {
+/* types */
+import { stateListProps, ApiResponse } from '../types/types';
 
-    const data: ApiResponse = useFetch(
-        'https://datausa.io/api/data?drilldowns=State&measures=Property+Value&year=2018,2019'
-      );
-      // print the output
-      if (!data.loading) console.log(data);
+/* Components */
+import { StateElement } from './stateElement';
 
-        
+/* Bootstrap */
+import { Container, Row } from 'react-bootstrap'
+
+
+const StateList = ({children, dataRequest}: stateListProps) => {
+
+  const res: ApiResponse = useFetch(
+    dataRequest.measure,
+    dataRequest.years
+  );
+  
+  const { cookData } = useCookdata(res.dataResponse);
+
+  return (
+    <Container>
+      <Row xs={1} md={2} lg={3} xl={4}>
+        { cookData && cookData.map( ( el, index ) => {
+          return (
+              <React.Fragment key={index} >
+                <StateElement stat={el} />
+              </React.Fragment>
+              )
+        } ) }
+      </Row>
+    </Container>
+  )      
 };
 
 export default StateList;

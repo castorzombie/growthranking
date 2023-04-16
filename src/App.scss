@@ -7,12 +7,22 @@ body {
     height: 100%;
 }
 
-#root, .app {
-    height: 100%;
+h2{
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-.formPanel {
-    height: 20rem;
+h3{
+    font-size: 1.2rem;
+    margin-bottom: 1.1rem;
+}
+
+
+#root, .app {
+    height: 100%;
 }
 
 .header {
@@ -31,5 +41,28 @@ body {
 
 .results {
     background-color: #8aa5d1;
-    height: calc(100% - 300px);
+    padding-top: 1rem;
+}
+
+.stateElement {
+    color: #fff;
+    background-color: #5A8EE0;
+    border: 1px solid #2C77E0;
+    margin: .5rem 0;
+    padding: .5rem;
+    p {
+        font-size: .6rem;
+        font-style: italic;
+        margin-top:.2rem
+    }
+}
+
+.stateName {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; 
+}
+
+.stateFigure {
+    text-align: center;
 }

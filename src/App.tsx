@@ -1,50 +1,30 @@
 /* Libraries */
-import React,{ useEffect, useState } from 'react';
+import React,{ useState } from 'react';
 
-/* Hooks */
-import { useFetch, ApiResponse } from './hooks/useFetch';
+/* Types */
+import { DataRequest, Selected } from './types/types';
 
 /* Components */
 import StateList from './components/stateList';
 
+/* Utils */
+import { range } from './utils/range';
+
 /* Bootstrap */
-import Col from 'react-bootstrap/Col'
-import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
-import Nav from 'react-bootstrap/Nav'
-import Row from 'react-bootstrap/Row'
+import { Col, Container, Form, Nav, Row } from 'react-bootstrap'
 
 /* Styles */
 import './App.scss'
 
-interface DataRequest {
-    year: number;
-    years: string;
-    measure: string;
-    growth: number;
-}
 
-enum Selected {
-    year = "year",
-    years = "years",
-    measure = "measure",
-    growth = "growth"
-}
-
-const range = (min:number, max:number) => Array.from({ length: max - min }, (_, i) => min + i);
-
-function App() {
+const App:React.FC = () => {
 
     const [dataRequest, setDataRequest] = useState<DataRequest>({
         year: 2019,
-        years:"2019", 
+        years:"2018,2019", 
         measure:"Household+Income",
         growth: 1
     });
-
-    useEffect(() => {
-
-    }, [dataRequest]); 
 
     const updateData = (selected: Selected, value: string | number) => {
         setDataRequest( prevState => ({
@@ -70,22 +50,22 @@ function App() {
 
     const yearListCalc = (selected: Selected, update: number) => { 
 
-        let min: number = 2019; 
+        let min: number = 2018; 
         let max: number = 2019;
-        let concatYears: string = "2019";
+        let concatYears: string = "2018,2019";
 
         switch(selected){
             case Selected.year:
-                min = update;
-                max = update + dataRequest.growth;
+                min = update - dataRequest.growth;
+                max = update;
                 break;
             case Selected.growth:
-                min = dataRequest.year;
-                max = dataRequest.year + update;
+                min = dataRequest.year - update;
+                max = dataRequest.year;
                 break;
         }
 
-        concatYears = range(min, max).join();
+        concatYears = [min, max].join();
         updateData(Selected.years, concatYears);
 
     };
@@ -106,11 +86,12 @@ function App() {
                                 <Form.Group>
                                     <Form.Label>Year</Form.Label>
                                     <Form.Control as='select' 
-                                        onChange={ event => handleChange(event as React.ChangeEvent<any>, Selected.year) } >
+                                        onChange={ event => handleChange(event as React.ChangeEvent<any>, Selected.year) }>
                                             <option value="2019">2019</option>
                                             <option value="2018">2018</option>
                                             <option value="2017">2017</option>
                                             <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -118,7 +99,7 @@ function App() {
                                 <Form.Group>
                                     <Form.Label>Measure</Form.Label>
                                     <Form.Control as='select' 
-                                        onChange={ event => handleChange(event as React.ChangeEvent<any>, Selected.measure) } >
+                                        onChange={ event => handleChange(event as React.ChangeEvent<any>, Selected.measure) }>
                                             <option value="Household+Income">Household Income</option>
                                             <option value="Population">Population</option>
                                             <option value="Property+Value">Property Value</option>
@@ -141,7 +122,9 @@ function App() {
                 </Container>
             </div>
             <div className='results'>
-                <Container></Container>
+                <Container>
+                    <StateList dataRequest={dataRequest}> <p>hello</p></StateList>
+                </Container>
             </div>
         </div>
     )
