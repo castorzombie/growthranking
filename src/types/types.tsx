@@ -32,10 +32,9 @@ export type CookState = {
 
 }
 
-export type GrowthItem = {
-    State: string;
+export type Growy = {
+    State: any;
     growth100: number;
 }
-  
 
   

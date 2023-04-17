@@ -7,9 +7,6 @@ import { DataRequest, Selected } from './types/types';
 /* Components */
 import StateList from './components/stateList';
 
-/* Utils */
-import { range } from './utils/range';
-
 /* Bootstrap */
 import { Col, Container, Form, Nav, Row } from 'react-bootstrap'
 

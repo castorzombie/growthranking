@@ -1,46 +1,58 @@
 /* Libraries */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-/*Types */
-import { GrowthItem } from '../types/types';
+/* Types */
+import { Growy } from '../types/types';
+
+/* Utils */
+import { calculateYOY } from '../utils/range';
 
 
 export const useGrowth = (dataResponse: any)  => {
 
-  const [ growthData, setGrowthData ] = useState<GrowthItem[]>([]);
+    const [growyList, setGrowyList] = useState<Growy[]>([]);
 
-  useEffect(() => {
-      if(dataResponse){
+    const prepareGrowyList = useCallback( (data: any) => {
 
-        dataResponse.data.map( (oldValues : any):void => {
+        let growyData:Growy[] = []
 
-            const currentValues = dataResponse.data.find( (el: any) => el.State === oldValues.State );
+        data.map( (currentValues: any):void => {
 
-            const { 
-                'Property Value': PropertyValueCurrent, 
-                State 
-            } = currentValues;
-          
-            const { 
-                'Property Value': PropertyValueOld 
-            } = oldValues;
+            const itemYear = currentValues.Year;
 
-            let a = PropertyValueCurrent - PropertyValueOld;
-            let b = PropertyValueOld;
-            let c = a / b;
-            const growth100 = c * 100;
+            const oldValues = dataResponse.data.find( (el: any) => (
+                el.State === currentValues.State && 
+                el.Year !== itemYear ) 
+            );  
 
-            const growthItem : GrowthItem = { 
-                State, 
-                growth100 };
+            const { 'Property Value': PVCurrent } = currentValues;
+            const { 'Property Value': PVOld } = oldValues;
+
+            const growy = {
+                State: currentValues.State,
+                growth100: calculateYOY( PVOld, PVCurrent )
+            };
+
+            const found = growyData.some( (el: any) => el.State === growy.State );
             
-            setGrowthData( prev => [ ...prev, growthItem ]);            
-            
+            if(!found){
+                growyData.push(growy);
+            }
+
         });
 
-      }
-  }, [dataResponse]);
+        setGrowyList(growyData);
 
-  return { growthData };
+    }, [dataResponse] );
+
+    useEffect(() => {
+        if(dataResponse){
+
+            prepareGrowyList(dataResponse.data);
+            
+        }
+    }, [dataResponse, prepareGrowyList]);
+
+    return { growyList };
 
 }

@@ -19,15 +19,11 @@ import { Container, Row } from 'react-bootstrap'
 
 const StateList = ({children, dataRequest}: stateListProps) => {
 
-  const [ primaryData, setPrimaryData] = useState<any>([]);
+  const [ displayData, setDisplayData] = useState<any>([]);
 
   const primaryResponse: ApiResponse = useFetch(
     dataRequest.measure,
     dataRequest.year
-  );
-
-  const { cookData } = useFormatdata(
-    primaryResponse.dataResponse
   );
 
   const growthResponse: ApiResponse = useFetch(
@@ -35,32 +31,36 @@ const StateList = ({children, dataRequest}: stateListProps) => {
     dataRequest.years
   );
 
-  const { growthData } = useGrowth(
+  const { cookData } = useFormatdata(
+    primaryResponse.dataResponse
+  );
+
+  const { growyList } = useGrowth(
     growthResponse.dataResponse
   );
 
   useEffect( () => {
-
-    if( cookData ){
-      //console.log(cookData)
-      //setPrimaryData(cookData);
+    if( cookData && cookData.length !== 0 ){
+      const newDisplayData = cookData.map( ( item: any ) => {
+        let found = growyList.find( el => el.State === item.State )
+        item["growth100"] = found?.growth100;
+        return item;
+      })
+      newDisplayData.sort((a, b) => Number(b.growth100) - Number(a.growth100));
+      console.log(newDisplayData);
+      setDisplayData(newDisplayData);
     }
 
-    if( growthResponse.dataResponse ){
-      //console.log(primaryData)
-      //console.log(growthResponse.dataResponse);
-    }
-
-    if( growthData ){
-      //console.log(growthData);
-    }
-
-   }, [cookData, primaryData, growthResponse, growthData])
+   }, [
+    cookData,
+    primaryResponse, 
+    growthResponse, 
+    growyList])
 
   return (
     <Container>
       <Row xs={1} md={2} lg={3} xl={4}>
-        { cookData && cookData.map( ( el, index ) => {
+        { displayData && displayData.map( ( el: any, index: React.Key ) => {
           return (
               <React.Fragment key={index} >
                 <StateElement stat={el} />
