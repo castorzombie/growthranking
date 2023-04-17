@@ -1,11 +1,12 @@
 
 /* Libraries */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 /* Hooks */
 import { useFetch } from '../hooks/useFetch';
 import { useFormatdata } from '../hooks/useFormatData';
 import { useGrowth } from '../hooks/useGrowth';
+import { useDisplayData } from '../hooks/useDisplayData';
 
 /* types */
 import { stateListProps, ApiResponse } from '../types/types';
@@ -18,8 +19,6 @@ import { Container, Row } from 'react-bootstrap'
 
 
 const StateList = ({children, dataRequest}: stateListProps) => {
-
-  const [ displayData, setDisplayData] = useState<any>([]);
 
   const primaryResponse: ApiResponse = useFetch(
     dataRequest.measure,
@@ -39,23 +38,10 @@ const StateList = ({children, dataRequest}: stateListProps) => {
     growthResponse.dataResponse
   );
 
-  useEffect( () => {
-    if( cookData && cookData.length !== 0 ){
-      const newDisplayData = cookData.map( ( item: any ) => {
-        let found = growyList.find( el => el.State === item.State )
-        item["growth100"] = found?.growth100;
-        return item;
-      })
-      newDisplayData.sort((a, b) => Number(b.growth100) - Number(a.growth100));
-      console.log(newDisplayData);
-      setDisplayData(newDisplayData);
-    }
-
-   }, [
+  const { displayData } = useDisplayData(
     cookData,
-    primaryResponse, 
-    growthResponse, 
-    growyList])
+    growyList
+  );
 
   return (
     <Container>

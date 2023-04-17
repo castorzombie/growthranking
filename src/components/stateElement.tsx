@@ -42,10 +42,10 @@ export const StateElement = ( { stat } : any ) => {
         </Row>
         <Row xs={2}>
           <Col>
-            <p>{display.growth}% Growth</p>
+            <p>{display.growth.toFixed(2)}% Growth</p>
           </Col>
           <Col className='stateFigure'>
-            <h3>${display.figure}</h3>
+            <h3>${display.figure.toLocaleString('en-US')}</h3>
           </Col>
         </Row>
       </Container>
