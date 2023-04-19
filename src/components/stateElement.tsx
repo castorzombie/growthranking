@@ -6,8 +6,6 @@ import { Container, Row, Col } from 'react-bootstrap'
 export const StateElement = ( { stat } : any ) => {
 
   const [ display, setDisplay] = useState({
-    name: "",
-    growth: 0,
     figure: 0
   });
 
@@ -15,15 +13,11 @@ export const StateElement = ( { stat } : any ) => {
     if(stat){
 
       const { 
-        State, 
         Population, 
         Household, 
-        PropertyValue, 
-        growth100 } = stat;
+        PropertyValue } = stat;
 
       setDisplay({
-        name: State,
-        growth: growth100,
         figure: Population ? Population : Household ? Household : PropertyValue ? PropertyValue : 0
       })
 
@@ -36,13 +30,13 @@ export const StateElement = ( { stat } : any ) => {
         <Row>
           <Col >
             <div className='stateName'>
-              <h2>{display.name}</h2>
+              <h2>{stat.State}</h2>
             </div>
           </Col>
         </Row>
         <Row xs={2}>
           <Col>
-            <p>{display.growth.toFixed(2)}% Growth</p>
+            <p>{stat.growth100.toFixed(2)}% Growth</p>
           </Col>
           <Col className='stateFigure'>
             <h3>${display.figure.toLocaleString('en-US')}</h3>
